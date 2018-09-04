@@ -1,0 +1,8 @@
+<div *ngIf="!isNameChosen">
+  <input type="text" id="username-input" name="username-input" class="form-control" placeholder="Enter username" [(ngModel)]="username">
+  <button id="entername" class="btn btn-default" type="bubtton" (click)="checkAvailability(username)">Choose</button>
+  <div [hidden]="!isUsernameTakenBool">Username taken, try again</div>
+</div>
+<div *ngIf="isNameChosen">
+  <app-homescreen [username]="username"></app-homescreen>
+</div>

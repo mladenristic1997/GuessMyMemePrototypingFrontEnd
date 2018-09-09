@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 export class AppComponent implements OnInit {
   title = 'app';
 
+  ws: any;
   username: string;
   isUsernameTaken: any;
   isUsernameTakenBool: boolean;
@@ -25,7 +26,7 @@ export class AppComponent implements OnInit {
   }
 
   checkAvailability(username: string){
-    this.httpIsUserAvailable = this.isUsernameAvailable();
+    this.httpIsUserAvailable = this.isUsernameExists();
     this.httpIsUserAvailable.subscribe(data => {
       this.isUsernameTaken = data.body;
       if(this.isUsernameTaken == true) {
@@ -38,11 +39,12 @@ export class AppComponent implements OnInit {
     setTimeout(() => {}, 3000);
   }
 
-  isUsernameAvailable(): Observable<HttpResponse<Object>> {
+  isUsernameExists(): Observable<HttpResponse<Object>> {
     let params = new HttpParams().set("username", this.username); //Create new HttpParams
     return this.http.get("http://localhost:8080/checkUsername", {
       params: params,
       observe: 'response'
     });
   }
+
 }

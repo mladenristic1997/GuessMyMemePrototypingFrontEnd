@@ -3,6 +3,7 @@
   <button id="entername" class="btn btn-default" type="bubtton" (click)="checkAvailability(username)">Choose</button>
   <div [hidden]="!isUsernameTakenBool">Username taken, try again</div>
 </div>
-<div *ngIf="isNameChosen">
+<div *ngIf="isNameChosen && !gameRequestFromPlayer">
   <app-homescreen [username]="username"></app-homescreen>
 </div>
+  

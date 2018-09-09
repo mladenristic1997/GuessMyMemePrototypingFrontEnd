@@ -5,11 +5,13 @@ import { HttpClientModule } from '@angular/common/http'
 
 import { AppComponent } from './app.component';
 import { HomescreenComponent } from './homescreen/homescreen.component';
+import { GameComponent } from './game/game.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    HomescreenComponent
+    HomescreenComponent,
+    GameComponent
   ],
   imports: [
     BrowserModule,

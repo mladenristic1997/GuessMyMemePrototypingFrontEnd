@@ -3,7 +3,6 @@ import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import { HttpClient, HttpResponse,HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { resolve, reject } from 'q';
 
 @Component({
   selector: 'app-homescreen',
@@ -15,15 +14,20 @@ export class HomescreenComponent implements OnInit {
   @Input() username: string;
   greetings: string[] = [];
   showConversation: boolean = false;
-  name: string;
+  message: string;
   ws: any;
   disabled: boolean;
   httpGetRoomId;
   roomId: any;
+  game: any;
+  otherPlayer = "";
+  opponent: any;
+  state: any;
 
   constructor(private http: HttpClient){}
 
   ngOnInit(){
+    this.connectUser();
   }
 
   getRoomId() {
@@ -31,30 +35,63 @@ export class HomescreenComponent implements OnInit {
     return this.http.get("http://localhost:8080/getRoomId", {params: params, observe: 'response'});
   }
 
-  assignRoomId(){
-    this.httpGetRoomId = this.getRoomId();
-    this.httpGetRoomId.subscribe(data => {
-      this.roomId = data.body;
-      this.connect();
+
+  startGameWithRequestingPlayer(playerToStartGameWith){
+    if(window.confirm("Do you accept game invitation from player " + playerToStartGameWith)){
+      let params = new HttpParams().set("playerOne", this.username).set("playerTwo", playerToStartGameWith); //Create new HttpParams
+      this.http.get("http://localhost:8080/acceptInvitation", {
+        params: params,
+        observe: 'response'
+      });
+    }
+  }
+
+  askOtherPlayer(){
+    //implement this method here and on the backend
+    let params = new HttpParams().set("requestingPlayer", this.username).set("otherPlayer", this.otherPlayer); //Create new HttpParams
+    this.otherPlayer = "";
+    this.http.get("http://localhost:8080/sendInvitation", {
+      params: params,
+      observe: 'response'
     });
   }
 
-  connect() {
+
+  //this method will handle if some user sent a request to play or if server sent a roomId to the user
+  handleServerMessage(game){
+    //it is a game invitation
+    if(game['requestingPlayer']){
+      //trigger the game request modal
+      this.startGameWithRequestingPlayer(game['requestingPlayer'])
+    }
+    //it is a game session object
+    else{
+      if(game['playerOneName'] == this.username){
+        this.state = 0;
+      }
+      if(game['playerTwoName'] == this.username){
+        this.state = 3;
+      }
+      this.game = game;
+    }
+  }
+
+  connectUser() {
     //connect to stomp where stomp endpoint is exposed
     //let withWS = new SockJS("http://localhost:8080/greeting");
     //if we want to use SockJS then in WebSocketConfig add withSockJS(); in Spring
-    console.log(this.roomId);
-    let subscribeUrl = "/topic/reply/" + this.roomId;
-    let socket = new WebSocket("ws://localhost:8080/greeting");
+    let subscribeUrl = "/topic/reply/" + this.username;
+    let socket = new WebSocket("ws://localhost:8080/connectUser");
     this.ws = Stomp.over(socket);
     let that = this;
     this.ws.connect({}, function(frame) {
       that.ws.subscribe("/errors", function(message) {
         alert("Error " + message.body);
       });
-      that.ws.subscribe(subscribeUrl, function(message) {
-        console.log(message)
-        that.showGreeting(message.body);
+      that.ws.subscribe(subscribeUrl, function(game) {
+        //we need this subscription if someone wants to play with this player
+        //so we will write a method that will trigger a message that asks to join
+        this.handleServerMessage(JSON.parse(game));
       });
       that.disabled = true;
     }, function(error) {
@@ -70,9 +107,9 @@ export class HomescreenComponent implements OnInit {
     console.log("Disconnected");
   }
 
-  sendName() {
+  sendMessage() {
     let data = JSON.stringify({
-      'name' : this.name,
+      'message' : this.message,
       'id' : "" + this.roomId
     })
     this.ws.send("/app/message", {}, data);

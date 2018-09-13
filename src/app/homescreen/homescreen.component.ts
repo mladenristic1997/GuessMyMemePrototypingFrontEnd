@@ -31,8 +31,17 @@ export class HomescreenComponent implements OnInit {
   }
 
   getRoomId() {
+    let data = JSON.stringify(
+      {
+        "username" : this.username
+      }
+    );
+
+    this.ws.send("/app/getRoomId", {}, data);
+    /*
     let params = new HttpParams().set("username", this.username); //Create new HttpParams
-    return this.http.get("http://localhost:8080/getRoomId", {params: params, observe: 'response'});
+    this.http.get("http://localhost:8080/getRoomId", {params: params, observe: 'response'});
+    console.log("sent");*/
   }
 
 
@@ -60,11 +69,14 @@ export class HomescreenComponent implements OnInit {
   //this method will handle if some user sent a request to play or if server sent a roomId to the user
   handleServerMessage(game){
     //it is a game invitation
-    if(game['requestingPlayer']){
+    /*if(game['requestingPlayer']){
       //trigger the game request modal
       this.startGameWithRequestingPlayer(game['requestingPlayer'])
-    }
+    }*/
     //it is a game session object
+    if(false){
+      //placehold, figure out how to deal with undefined values
+    }
     else{
       if(game['playerOneName'] == this.username){
         this.state = 0;
@@ -91,7 +103,8 @@ export class HomescreenComponent implements OnInit {
       that.ws.subscribe(subscribeUrl, function(game) {
         //we need this subscription if someone wants to play with this player
         //so we will write a method that will trigger a message that asks to join
-        this.handleServerMessage(JSON.parse(game));
+        console.log(game);
+        this.handleServerMessage(game.body);
       });
       that.disabled = true;
     }, function(error) {

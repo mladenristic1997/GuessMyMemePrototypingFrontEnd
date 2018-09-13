@@ -12,8 +12,8 @@
       </div>
     </div>
     <div class="row">
-      <button id="send" class="btn btn-default" type="button" (click)="getRoomId()">Play a random match</button>
       <form class="form-inline" name="ask-player">
+        <button id="send" class="btn btn-default" type="button" (click)="getRoomId()">Play a random match</button>
         <input type="text" id="username-input" name="username-input" class="form-control" placeholder="Enter player name" [(ngModel)]="otherPlayer">
         <button id="entername" class="btn btn-default" type="bubtton" (click)="askOtherPlayer()">Ask the player to join</button>
       </form>
@@ -21,5 +21,5 @@
   </div>
 </div>
 <div *ngIf="game">
-  <app-game [game] = "game" [username] = "username" [state] = "state"></app-game>
+  <app-game [game]="game" [username]="username" [state]="state"></app-game>
 </div>

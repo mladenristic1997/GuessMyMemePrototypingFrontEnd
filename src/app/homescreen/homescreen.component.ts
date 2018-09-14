@@ -45,6 +45,8 @@ export class HomescreenComponent implements OnInit {
   }
 
 
+
+
   startGameWithRequestingPlayer(playerToStartGameWith){
     if(window.confirm("Do you accept game invitation from player " + playerToStartGameWith)){
       let params = new HttpParams().set("playerOne", this.username).set("playerTwo", playerToStartGameWith); //Create new HttpParams
@@ -64,7 +66,6 @@ export class HomescreenComponent implements OnInit {
       observe: 'response'
     });
   }
-
 
   //this method will handle if some user sent a request to play or if server sent a roomId to the user
   handleServerMessage(game){
@@ -103,8 +104,7 @@ export class HomescreenComponent implements OnInit {
       that.ws.subscribe(subscribeUrl, function(game) {
         //we need this subscription if someone wants to play with this player
         //so we will write a method that will trigger a message that asks to join
-        console.log(game);
-        this.handleServerMessage(game.body);
+        that.handleServerMessage(JSON.parse(game.body));
       });
       that.disabled = true;
     }, function(error) {

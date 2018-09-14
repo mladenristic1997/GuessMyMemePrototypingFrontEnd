@@ -27,9 +27,7 @@ export class GameComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient) { }
 
   ngOnInit() {
-    this.connect(this.game['roomId']);
     this.setGameUp(this.game);
-
   }
 
   ngOnDestroy(){
@@ -41,17 +39,25 @@ export class GameComponent implements OnInit, OnDestroy {
       this.myMeme = game['playerOneMeme'];
       this.opponentName = game['playerTwoName'];
       this.opponentMeme = game['playerTwoMeme'];
+      this.connect(game['roomId'], game['playerTwoName']);
     }
     if(this.username == game['playerTwoName']){
       this.myMeme = game['playerTwoMeme'];
       this.opponentName = game['playerOneName'];
-      this.opponentMeme = game['playerOneMeme'];    
+      this.opponentMeme = game['playerOneMeme'];
+      this.connect(game['roomId'], game['playerOneName']);
     }
   }
 
   makeMove(){
-    let params = new HttpParams().set("opponent", this.opponentName).set("move", this.myMove);
-    this.http.get("http://localhost:8080/makeAMove", {params: params, observe: 'response'});
+    let data = JSON.stringify(
+      {
+        "username": this.username,
+        "move": this.myMove,
+        "roomId": this.game['roomId']
+      }
+    );
+    this.ws.send("/app/makeAMove", {}, data);
     this.state = (this.state + 1) % 6;
     this.chatHistory.push(this.myMove);
   }
@@ -60,6 +66,8 @@ export class GameComponent implements OnInit, OnDestroy {
     //tempState is used because the logic is more intuitive that way
     //and we must increment state at the end because logic of the move should happen before it
     let tempState = this.state;
+    this.chatHistory.push(move);
+
     /*
     *   Game states:
     *   0 - asking question
@@ -69,7 +77,7 @@ export class GameComponent implements OnInit, OnDestroy {
     *   4 - got question
     *   5 - answered question
     */
-
+/*
     switch(tempState){
       case 1:
         this.chatHistory.push(move);
@@ -80,14 +88,14 @@ export class GameComponent implements OnInit, OnDestroy {
       default: console.log("Error while handling move");
     }
 
-    this.state = (this.state + 1) % 6;  
+    this.state = (this.state + 1) % 6;*/
   }
 
-  connect(id){
+  connect(roomId, id){
     //connect to stomp where stomp endpoint is exposed
     //let withWS = new SockJS("http://localhost:8080/greeting");
     //if we want to use SockJS then in WebSocketConfig add withSockJS(); in Spring
-    let subscribeUrl = "/topic/reply/" + id;
+    let subscribeUrl = "/topic/reply/" + roomId + "/" + id;
     let socket = new WebSocket("ws://localhost:8080/connectUser");
     this.ws = Stomp.over(socket);
     let that = this;
@@ -96,7 +104,7 @@ export class GameComponent implements OnInit, OnDestroy {
         alert("Error " + message.body);
       });
       that.ws.subscribe(subscribeUrl, function(move) {
-        this.handleMove(move);
+        that.handleMove(move.body);
       });
     }, function(error) {
       alert("STOMP error " + error);

@@ -1,11 +1,18 @@
 <div class="row">
-    <div class="col-md-6">
-      <form class="form-inline" name="test-form">
-        <div class="form-group">
-          <label for="name">Enter message here</label>
-          <input type="text" id="name" name="name" class="form-control" placeholder="Your message here..." [(ngModel)]="myMove">
-        </div>
-        <button id="send" class="btn btn-default" type="button" (click)="makeMove()">Send</button>
-      </form>
+  <div class="col-md-6">
+    <form class="form-inline" name="test-form">
+      <div class="form-group">
+        <label for="name">Enter message here</label>
+        <input type="text" id="name" name="name" class="form-control" placeholder="Your message here..." [(ngModel)]="myMove">
+      </div>
+      <button id="send" class="btn btn-default" type="button" (click)="makeMove()">Send</button>
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <div *ngFor="let message of chatHistory">
+      {{message}}
     </div>
   </div>
+</div>

@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^6.1.0",
+    "@angular/animations": "^6.1.7",
     "@angular/common": "^6.1.0",
     "@angular/compiler": "^6.1.0",
     "@angular/core": "^6.1.0",
@@ -22,6 +22,7 @@
     "@angular/router": "^6.1.0",
     "core-js": "^2.5.4",
     "net": "^1.0.2",
+    "ngx-materialize": "^6.1.3",
     "rxjs": "^6.0.0",
     "sockjs-client": "^1.1.5",
     "stompjs": "^2.3.3",

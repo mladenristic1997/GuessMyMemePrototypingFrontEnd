@@ -1,17 +1,6 @@
 <div *ngIf="!game"> 
   <div id="main-content" class="container">
     <div class="row">
-      <div class="col-md-6">
-        <form class="form-inline" name="test-form">
-          <div class="form-group">
-            <label for="name">What is your name?</label>
-            <input type="text" id="name" name="name" class="form-control" placeholder="Your name here..." [(ngModel)]="name">
-          </div>
-          <button id="send" class="btn btn-default" type="button" (click)="sendName()">Send</button>
-        </form>
-      </div>
-    </div>
-    <div class="row">
       <form class="form-inline" name="ask-player">
         <button id="send" class="btn btn-default" type="button" (click)="getRoomId()">Play a random match</button>
         <input type="text" id="username-input" name="username-input" class="form-control" placeholder="Enter player name" [(ngModel)]="otherPlayer">

@@ -3,6 +3,7 @@ import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import { HttpClient, HttpResponse,HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { isUndefined } from 'util';
 
 @Component({
   selector: 'app-homescreen',
@@ -36,7 +37,6 @@ export class HomescreenComponent implements OnInit {
         "username" : this.username
       }
     );
-
     this.ws.send("/app/getRoomId", {}, data);
     /*
     let params = new HttpParams().set("username", this.username); //Create new HttpParams
@@ -49,22 +49,25 @@ export class HomescreenComponent implements OnInit {
 
   startGameWithRequestingPlayer(playerToStartGameWith){
     if(window.confirm("Do you accept game invitation from player " + playerToStartGameWith)){
-      let params = new HttpParams().set("playerOne", this.username).set("playerTwo", playerToStartGameWith); //Create new HttpParams
-      this.http.get("http://localhost:8080/acceptInvitation", {
-        params: params,
-        observe: 'response'
-      });
+      let data = JSON.stringify(
+        {
+          "playerOne": this.username,
+          "playerTwo": playerToStartGameWith
+        }
+      );
+      this.ws.send("/app/acceptInvitation");
     }
   }
 
   askOtherPlayer(){
-    //implement this method here and on the backend
-    let params = new HttpParams().set("requestingPlayer", this.username).set("otherPlayer", this.otherPlayer); //Create new HttpParams
+    let data = JSON.stringify(
+      {
+        "requestingPlayer": this.username,
+        "otherPlayer": this.otherPlayer
+      }
+    );
     this.otherPlayer = "";
-    this.http.get("http://localhost:8080/sendInvitation", {
-      params: params,
-      observe: 'response'
-    });
+    this.ws.send("/app/sendInvitation", {}, data);
   }
 
   //this method will handle if some user sent a request to play or if server sent a roomId to the user
@@ -75,10 +78,10 @@ export class HomescreenComponent implements OnInit {
       this.startGameWithRequestingPlayer(game['requestingPlayer'])
     }*/
     //it is a game session object
-    if(false){
-      //placehold, figure out how to deal with undefined values
+    if(game['requestingPlayer']){
+      this.startGameWithRequestingPlayer(game['requestingPlayer']);
     }
-    else{
+    else{ //we know we are handling a game object
       if(game['playerOneName'] == this.username){
         this.state = 0;
       }

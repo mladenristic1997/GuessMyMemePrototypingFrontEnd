@@ -59,14 +59,14 @@ export class GameComponent implements OnInit, OnDestroy {
     );
     this.ws.send("/app/makeAMove", {}, data);
     this.state = (this.state + 1) % 6;
-    this.chatHistory.push(this.myMove);
+    this.chatHistory.push(this.username + " says: \n" + this.myMove);
   }
 
   handleMove(move){
     //tempState is used because the logic is more intuitive that way
     //and we must increment state at the end because logic of the move should happen before it
     let tempState = this.state;
-    this.chatHistory.push(move);
+    this.chatHistory.push(this.opponentName + " says: \n" + move);
 
     /*
     *   Game states:

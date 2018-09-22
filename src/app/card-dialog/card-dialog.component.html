@@ -1,0 +1,13 @@
+<p mat-dialog-title class="meme-title">{{data['name']}}</p>
+
+<mat-dialog-content>
+  <div class="wrapper">
+    <img [src]="data['path']" class="meme-image">
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions class="centered">
+  <button class="btn red lighten-2 hoverable dialog-button" (click)="exit()">Exit</button>
+  <button class="btn btn-primary hoverable dialog-button" (click)="flip()">Flip</button>
+  <button class="btn purple lighten-1 hoverable dialog-button" (click)="guess()">Guess</button>
+</mat-dialog-actions>

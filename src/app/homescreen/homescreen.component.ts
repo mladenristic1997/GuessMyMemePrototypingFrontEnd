@@ -4,6 +4,8 @@ import * as SockJS from 'sockjs-client';
 import { HttpClient, HttpResponse,HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { isUndefined } from 'util';
+import { MatDialog } from '@angular/material/dialog';
+import { DonateDialogComponent } from '../donate-dialog/donate-dialog.component';
 
 @Component({
   selector: 'app-homescreen',
@@ -13,6 +15,7 @@ import { isUndefined } from 'util';
 export class HomescreenComponent implements OnInit {
 
   @Input() username: string;
+  isDonateMessageShown = false;
   greetings: string[] = [];
   showConversation: boolean = false;
   message: string;
@@ -25,10 +28,25 @@ export class HomescreenComponent implements OnInit {
   opponent: any;
   state: any;
 
-  constructor(private http: HttpClient){}
+  constructor(private http: HttpClient, private dialog: MatDialog){}
 
   ngOnInit(){
-    this.connectUser();
+    //this.connectUser();
+    if(!this.isDonateMessageShown){
+      console.log("show");
+      this.showDonateDialog();
+    }
+  }
+
+  showDonateDialog(){
+    let dialogRef = this.dialog.open(DonateDialogComponent, {
+      height: '450px',
+      width: '450px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.isDonateMessageShown = true;
+    });
   }
 
   getRoomId() {

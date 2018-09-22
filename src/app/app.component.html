@@ -1,10 +1,13 @@
-<app-game></app-game>
 <!--<div *ngIf="!isNameChosen">
-  <input type="text" id="username-input" name="username-input" class="form-control" placeholder="Enter username" [(ngModel)]="username">
-  <button id="entername" class="btn btn-default" type="button" (click)="checkAvailability(username)">Choose</button>
-  <div [hidden]="!isUsernameTakenBool">Username taken, try again</div>
+  <div class="center-align in-center">
+    <input type="text" id="username-input" name="username-input" class="form-control" placeholder="Enter username" [(ngModel)]="username">
+    <br />
+    <button id="entername" class="btn btn-default hoverable" type="button" (click)="checkAvailability(username)">Choose</button>
+    <div [hidden]="!isUsernameTakenBool">Username taken, try again</div>
+  </div>
 </div>
 <div *ngIf="isNameChosen && !gameRequestFromPlayer">
   <app-homescreen [username]="username"></app-homescreen>
 </div>-->
+<app-homescreen></app-homescreen>
   

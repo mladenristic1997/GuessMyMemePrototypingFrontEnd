@@ -1,0 +1,44 @@
+.in-center{
+    margin-top: 40vh;
+}
+#username-input{
+    width: 250px;
+    font-size: 3vh;
+    font-weight: bold;
+    margin: 2.6vh;
+}
+::-webkit-input-placeholder {
+    text-align: right;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+    text-align: right;  
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+    text-align: right;  
+}
+
+:-ms-input-placeholder {  
+    text-align: right; 
+}
+#entername{
+    margin: 2.6vh;
+    margin-bottom: 3.2vh;
+    margin-left: 0px;
+}
+#send{
+    margin: 2.6vh;
+}
+.ask-player{
+    background-color: #8ba1a5;
+    text-align: center;
+    display: inline-block;
+    border-radius: 10px 10px 10px 10px;  
+}
+.play-random{
+    background-color: #8ba1a5;
+    text-align: center;
+    display: inline-block;
+    border-radius: 10px 10px 10px 10px;
+}

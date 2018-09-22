@@ -1,7 +1,12 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import { HttpClient, HttpResponse,HttpParams } from '@angular/common/http';
+import { trigger, animate, style, state, transition } from '@angular/animations';
+import { CardDialogComponent } from '../card-dialog/card-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import * as $ from 'jquery';
+import { ExitGameDialogComponent } from '../exit-game-dialog/exit-game-dialog.component';
 
 
 @Component({
@@ -11,9 +16,11 @@ import { HttpClient, HttpResponse,HttpParams } from '@angular/common/http';
 })
 export class GameComponent implements OnInit, OnDestroy {
 
+  @ViewChild('panel') public panel:ElementRef;
   @Input() game: any;
   @Input() username: any;
   @Input() state: any;
+  scroll: any;
   opponentName: any;
   myMeme: any;
   opponentMeme: any;
@@ -21,17 +28,71 @@ export class GameComponent implements OnInit, OnDestroy {
   myMove: any;
   opponentQuestion: any;
   opponentAnswer: any;
-  chatHistory: string[] = [];
+  chatHistory = [
+    {
+      'message': 'You are on this council but we do not grant you the rank of master',
+      'isMyMessage': true
+    },
+    {
+      'message': 'Vat',
+      'isMyMessage': false
+    }
+  ];
+  moveStatus: string;
+  opponentCardsRow1 = [
+    false, false, false, false, false, false, false, false
+  ];
+  opponentCardsRow2 = [
+    false, false, false, false, false, false, false, false
+  ];
+  opponentCardsRow3 = [
+    false, false, false, false, false, false, false, false
+  ];
+  memes = [];
+  memeNames = ['Bongo Cat', 'Doge', 'Harambe', 'Etruscan Boar', 'Slaps Roof', 'Ugandan Knuckles', 'Dat Boi', 'Pepe', 'Dickbutt', 'Bike Cuck', 'Monkey Haircut', 'Ben Swolo', 'Just Right', 'Circle Game', 'Somebody touch my spaghet', 'Omae wa mou shindeiru', 'Skidaddle Skidoodle', 'Distracted Boyfriend', 'Zucc', 'Change my mind', 'Evil Patrick', 'American Chopper', 'Is this a pidgeon', 'Rick Astley'];
+  myCardsRow1 = [0, 1, 2, 3, 4, 5, 6, 7];
+  myCardsRow2 = [8, 9, 10, 11, 12, 13, 14, 15];
+  myCardsRow3 = [16, 17, 18, 19, 20, 21, 22, 23];
 
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.setGameUp(this.game);
+    //commented out for now
+    //this.setGameUp(this.game);
+    for(let i = 0; i < 24; i++){
+      this.memes.push({'name': this.memeNames[i], 'id': i, 'path': '../../assets/memes/' + i + '.png', 'isFlipped': false});
+    }
+    this.myMeme = {'name': this.memeNames[14], 'id': 14, 'path': '../../assets/memes/14.png', 'isFlipped': false};
   }
 
   ngOnDestroy(){
     this.disconnect();
+  }
+
+  exitGame(){
+    let dialogRef = this.dialog.open(ExitGameDialogComponent, {
+      height: '150px',
+      width: '450px',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result){
+        //if i return true from dialog then user clicked Exit and now send message to server to end game and return player to homescreen
+        this.game = undefined;
+      }
+    });
+  }
+
+  endGameDialog(endGameStatus, endGameMessage){
+    let dialogRef = this.dialog.open(ExitGameDialogComponent, {
+      height: '250px',
+      width: '450px',
+      data: {'endGameStatus': endGameStatus, 'endGameMessage': endGameMessage}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.game = undefined;
+    });
   }
 
   setGameUp(game){
@@ -50,7 +111,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   makeMove(){
-    let data = JSON.stringify(
+    /*let data = JSON.stringify(
       {
         "username": this.username,
         "move": this.myMove,
@@ -58,15 +119,29 @@ export class GameComponent implements OnInit, OnDestroy {
       }
     );
     this.ws.send("/app/makeAMove", {}, data);
-    this.state = (this.state + 1) % 6;
-    this.chatHistory.push(this.username + " says: \n" + this.myMove);
+    this.state = (this.state + 1) % 6;*/
+    if(this.myMove){
+      let messageJson = {
+        'message': this.myMove,
+        'isMyMessage': true
+      }
+      this.chatHistory.push(messageJson);
+      this.myMove = "";
+      this.moveToSpecificView();
+      document.getElementById('elementId').scrollTop = 0;
+    }
   }
 
   handleMove(move){
     //tempState is used because the logic is more intuitive that way
     //and we must increment state at the end because logic of the move should happen before it
     let tempState = this.state;
-    this.chatHistory.push(this.opponentName + " says: \n" + move);
+    let messageJson = {
+      'message': move,
+      'isMyMessage': false
+    }
+    this.chatHistory.push(messageJson);
+    this.moveToSpecificView();
 
     /*
     *   Game states:
@@ -77,7 +152,7 @@ export class GameComponent implements OnInit, OnDestroy {
     *   4 - got question
     *   5 - answered question
     */
-/*
+    /*
     switch(tempState){
       case 1:
         this.chatHistory.push(move);
@@ -117,6 +192,26 @@ export class GameComponent implements OnInit, OnDestroy {
     }
 
     console.log("Disconnected");
+  }
+
+  openDialog(meme): void {
+    if(!meme['isFlipped']){
+      let dialogRef = this.dialog.open(CardDialogComponent, {
+        panelClass: 'card-dialog',
+        data: meme
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if(result){
+          //this means the player has made a guess, send it now to server and check if this meme is the correct meme
+        }
+      });
+    }
+  }
+
+  //scroll to bottom on every new message
+  moveToSpecificView(): void {
+      $("#scroll-to-bottom").animate({ scrollTop: $('#scroll-to-bottom')[0].scrollHeight }, 1000);
   }
 
 }

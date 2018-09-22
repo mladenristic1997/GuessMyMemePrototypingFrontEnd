@@ -1,11 +1,25 @@
 <div *ngIf="!game"> 
-  <div id="main-content" class="container">
+  <div class="center-align in-center">
     <div class="row">
-      <form class="form-inline" name="ask-player">
+      <div class="play-random">
         <button id="send" class="btn btn-default" type="button" (click)="getRoomId()">Play a random match</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="ask-player">
         <input type="text" id="username-input" name="username-input" class="form-control" placeholder="Enter player name" [(ngModel)]="otherPlayer">
-        <button id="entername" class="btn btn-default" type="bubtton" (click)="askOtherPlayer()">Ask the player to join</button>
-      </form>
+        <button id="entername" class="btn btn-default" type="bubtton" (click)="askOtherPlayer()">Play with a friend</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="play-random">
+        <button id="send" class="btn purple lighten-2 hoverable" type="button">Consider Donating</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="play-random">
+        <a href="https://github.com/mladenristic1997/GuessMyMemePrototypingFrontEnd" target="_blank"><button class="btn black hoverable" id="send">Github</button></a>
+      </div>
     </div>
   </div>
 </div>

@@ -22,8 +22,7 @@ h1, p{
 }
 .mat-dialog-container {
     background-color: #637B80 !important;
-    height: 570px !important;
-    width: 450px !important;
+    overflow: hidden !important;
 }
 .mat-dialog-content {
     overflow: hidden !important;

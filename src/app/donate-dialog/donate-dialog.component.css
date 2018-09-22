@@ -5,10 +5,10 @@
     background-color: #8ba1a5;
     border-radius: 10px 10px 10px 10px;
     width: 100%;
-    height: 398px;
+    height: 65vh;
 }
 .donate-message{
-    font-size: 18px;
+    font-size: 2.3vh;
     font-weight: bold;
     margin: 15px;
     margin-top: 0px;
@@ -17,8 +17,11 @@
 .donate-title{
     text-align: center;
     font-weight: bold;
-    font-size: 22px;
+    font-size: 3.3vh;
     margin: 0px !important;
+}
+.donate-message-wrapper{
+    margin-top: 1rem;
 }
 .centered{
     text-align: center !important;

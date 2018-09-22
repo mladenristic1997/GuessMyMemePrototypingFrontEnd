@@ -40,7 +40,7 @@ export class HomescreenComponent implements OnInit {
 
   showDonateDialog(){
     let dialogRef = this.dialog.open(DonateDialogComponent, {
-      height: '450px',
+      height: '73vh',
       width: '450px',
     });
 

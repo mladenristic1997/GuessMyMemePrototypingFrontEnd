@@ -198,7 +198,9 @@ export class GameComponent implements OnInit, OnDestroy {
     if(!meme['isFlipped']){
       let dialogRef = this.dialog.open(CardDialogComponent, {
         panelClass: 'card-dialog',
-        data: meme
+        data: meme,
+        height: '560px',
+        width: '430px'
       });
 
       dialogRef.afterClosed().subscribe(result => {

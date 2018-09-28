@@ -11,20 +11,20 @@
     margin-bottom: 1.3vh;
     height: 97.4vh;
     text-align: center;
-    background-color: #8ba1a5;
+    background-color: #637B80;
 }
 .my-card-box{
     border: 1px solid #4a4e4f;
     margin-top: 1.3vh;
     height: 27vh;
-    background-color: #8ba1a5;
+    background-color: #637B80;
 }
 .messages-side{
     border: 1px solid #4a4e4f;
     margin-top: 1.3vh;
     margin-bottom: 1.3vh;
     height: 42vh;
-    background-color: #8ba1a5;
+    background-color: #637B80;
 }
 .messages-box{
     margin-top: 1.3vh;
@@ -56,7 +56,7 @@
     text-align: right;
 }
 .question-answer-field{
-    background-color: #8ba1a5;
+    background-color: #637B80;
     border: 1px solid #4a4e4f;
     margin-bottom: 0.3vh;
     height: 25.7vh;
@@ -70,7 +70,7 @@
 #submitMove{
     font-size: 2.3vh;
     font-weight: bold;
-    margin-bottom: 0.3vh;
+    margin-bottom: 1.6vh;
 }
 ::-webkit-input-placeholder {
     text-align: center;
@@ -97,10 +97,12 @@
 }
 #send-button{
     margin-bottom: 1.6vh;
+    max-height: 35px;
     height: 5vh;
 }
 #end-turn-button{
     height: 5vh;
+    max-height: 35px;
 }
 /* messages scrollbar begin*/
 .messages-box::-webkit-scrollbar-track

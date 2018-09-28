@@ -25,15 +25,17 @@ export class HomescreenComponent implements OnInit {
   roomId: any;
   game: any;
   otherPlayer = "";
+  askOtherPlayerName = "";
   opponent: any;
   state: any;
+  playerInLobby = false;
+  askedSomeoneForMatch = false;
 
   constructor(private http: HttpClient, private dialog: MatDialog){}
 
   ngOnInit(){
     //this.connectUser();
     if(!this.isDonateMessageShown){
-      console.log("show");
       this.showDonateDialog();
     }
   }
@@ -50,6 +52,7 @@ export class HomescreenComponent implements OnInit {
   }
 
   getRoomId() {
+    this.playerInLobby = true;
     let data = JSON.stringify(
       {
         "username" : this.username
@@ -62,9 +65,6 @@ export class HomescreenComponent implements OnInit {
     console.log("sent");*/
   }
 
-
-
-
   startGameWithRequestingPlayer(playerToStartGameWith){
     if(window.confirm("Do you accept game invitation from player " + playerToStartGameWith)){
       let data = JSON.stringify(
@@ -73,18 +73,37 @@ export class HomescreenComponent implements OnInit {
           "playerTwo": playerToStartGameWith
         }
       );
-      this.ws.send("/app/acceptInvitation");
+      this.playerInLobby = false;
+      this.ws.send("/app/acceptInvitation", {}, data);
     }
+    else{
+      let data = JSON.stringify(
+        {
+          "otherPlayer": playerToStartGameWith
+        }
+      );
+      this.ws.send("/app/refuseInvitation", {}, data);
+    }
+  }
+
+  checkIfOtherPlayerAvailable(){
+    this.askOtherPlayerName = this.otherPlayer;
+    this.otherPlayer = "";
+    let data = JSON.stringify({
+      "requestingPlayer": this.username,
+      "otherPlayer": this.askOtherPlayerName
+    });
+    this.ws.send("/app/isOtherPlayerAvailable", {}, data);
   }
 
   askOtherPlayer(){
     let data = JSON.stringify(
       {
         "requestingPlayer": this.username,
-        "otherPlayer": this.otherPlayer
+        "otherPlayer": this.askOtherPlayerName
       }
     );
-    this.otherPlayer = "";
+    this.askedSomeoneForMatch = true;
     this.ws.send("/app/sendInvitation", {}, data);
   }
 
@@ -96,16 +115,26 @@ export class HomescreenComponent implements OnInit {
       this.startGameWithRequestingPlayer(game['requestingPlayer'])
     }*/
     //it is a game session object
-    if(game['requestingPlayer']){
+    if(game['refuseInvite'] === true){
+      this.askedSomeoneForMatch = false;
+    }
+    else if(game['playerAvailable'] === false){
+      this.askedSomeoneForMatch = false;
+    }
+    else if(game['playerAvailable'] === true){
+      this.askOtherPlayer();
+    }
+    else if(game['requestingPlayer']){
       this.startGameWithRequestingPlayer(game['requestingPlayer']);
     }
-    else{ //we know we are handling a game object
+    else if(game){ //we know we are handling a game object
       if(game['playerOneName'] == this.username){
         this.state = 0;
       }
       if(game['playerTwoName'] == this.username){
         this.state = 3;
       }
+      this.playerInLobby = false;
       this.game = game;
     }
   }

@@ -127,7 +127,7 @@ export class GameComponent implements OnInit, OnDestroy {
       }
       this.chatHistory.push(messageJson);
       this.myMove = "";
-      this.moveToSpecificView();
+      this.scrollToChatBottom();
       document.getElementById('elementId').scrollTop = 0;
     }
   }
@@ -141,7 +141,7 @@ export class GameComponent implements OnInit, OnDestroy {
       'isMyMessage': false
     }
     this.chatHistory.push(messageJson);
-    this.moveToSpecificView();
+    this.scrollToChatBottom();
 
     /*
     *   Game states:
@@ -212,7 +212,7 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   //scroll to bottom on every new message
-  moveToSpecificView(): void {
+  scrollToChatBottom(): void {
       $("#scroll-to-bottom").animate({ scrollTop: $('#scroll-to-bottom')[0].scrollHeight }, 1000);
   }
 

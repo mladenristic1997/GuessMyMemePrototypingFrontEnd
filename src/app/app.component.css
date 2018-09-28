@@ -1,8 +1,23 @@
 .in-center{
-    margin-top: 35%;
+    margin-top: 50vh;
 }
 #username-input{
     width: 300px;
     font-size: 18px;
     font-weight: bold;
+    margin: 15px;
+}
+.username-taken{
+    font-size: 18px;
+    font-weight: bold;
+    margin: 15px;
+}
+#entername{
+    margin: 15px;
+}
+.wrapper-box{
+    background-color: #637B80;
+    text-align: center;
+    display: inline-block;
+    border-radius: 10px 10px 10px 10px;
 }

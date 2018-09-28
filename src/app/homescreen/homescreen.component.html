@@ -2,13 +2,13 @@
   <div class="center-align in-center">
     <div class="row">
       <div class="play-random">
-        <button id="send" class="btn btn-default" type="button" (click)="getRoomId()">Play a random match</button>
+        <button id="send" [disabled]="playerInLobby || askedSomeoneForMatch" class="btn btn-default" type="button" (click)="getRoomId()">Play a random match</button>
       </div>
     </div>
     <div class="row">
       <div class="ask-player">
-        <input type="text" id="username-input" name="username-input" class="form-control" placeholder="Enter player name" [(ngModel)]="otherPlayer">
-        <button id="entername" class="btn btn-default" type="bubtton" (click)="askOtherPlayer()">Play with a friend</button>
+        <input type="text" [disabled]="playerInLobby || askedSomeoneForMatch" id="username-input" name="username-input" class="form-control" placeholder="Enter player name" [(ngModel)]="otherPlayer">
+        <button id="entername" [disabled]="playerInLobby || askedSomeoneForMatch" class="btn btn-default" type="bubtton" (click)="checkIfOtherPlayerAvailable()">Play with a friend</button>
       </div>
     </div>
     <div class="row">

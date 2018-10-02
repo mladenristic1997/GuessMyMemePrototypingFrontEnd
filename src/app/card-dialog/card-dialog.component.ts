@@ -15,12 +15,12 @@ export class CardDialogComponent implements OnInit {
   }
 
   guess(){
-    this.dialogRef.close(this.data);
+    this.dialogRef.close('guess');
   }
 
   flip(){
     this.data['isFlipped'] = true;
-    this.dialogRef.close();
+    this.dialogRef.close('flip');
   }
 
   exit(){

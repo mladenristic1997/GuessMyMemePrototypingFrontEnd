@@ -26,3 +26,8 @@
 .centered{
     text-align: center !important;
 }
+@media screen and (max-width: 1366px){
+    .donate-message{
+        font-size: 2.5vh;
+    }
+}

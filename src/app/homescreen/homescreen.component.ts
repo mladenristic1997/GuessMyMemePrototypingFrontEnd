@@ -16,9 +16,7 @@ export class HomescreenComponent implements OnInit {
 
   @Input() username: string;
   isDonateMessageShown = false;
-  greetings: string[] = [];
   showConversation: boolean = false;
-  message: string;
   ws: any;
   disabled: boolean;
   httpGetRoomId;
@@ -34,7 +32,7 @@ export class HomescreenComponent implements OnInit {
   constructor(private http: HttpClient, private dialog: MatDialog){}
 
   ngOnInit(){
-    //this.connectUser();
+    this.connectUser();
     if(!this.isDonateMessageShown){
       this.showDonateDialog();
     }
@@ -115,7 +113,7 @@ export class HomescreenComponent implements OnInit {
       this.startGameWithRequestingPlayer(game['requestingPlayer'])
     }*/
     //it is a game session object
-    if(game['refuseInvite'] === true){
+    if(game['refuseInvitation'] === true){
       this.askedSomeoneForMatch = false;
     }
     else if(game['playerAvailable'] === false){
@@ -141,7 +139,7 @@ export class HomescreenComponent implements OnInit {
 
   connectUser() {
     //connect to stomp where stomp endpoint is exposed
-    //let withWS = new SockJS("http://localhost:8080/greeting");
+    //let withWS = new SockJS("http://localhost:8080/connectUser");
     //if we want to use SockJS then in WebSocketConfig add withSockJS(); in Spring
     let subscribeUrl = "/topic/reply/" + this.username;
     let socket = new WebSocket("ws://localhost:8080/connectUser");
@@ -166,26 +164,7 @@ export class HomescreenComponent implements OnInit {
     if (this.ws != null) {
       this.ws.ws.close();
     }
-    this.setConnected(false);
     console.log("Disconnected");
   }
 
-  sendMessage() {
-    let data = JSON.stringify({
-      'message' : this.message,
-      'id' : "" + this.roomId
-    })
-    this.ws.send("/app/message", {}, data);
-  }
-
-  showGreeting(message) {
-    this.showConversation = true;
-    this.greetings.push(message)
-  }
-
-  setConnected(connected) {
-    this.disabled = connected;
-    this.showConversation = connected;
-    this.greetings = [];
-  }
 }

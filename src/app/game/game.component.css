@@ -153,3 +153,11 @@
     width: 8vw;
     height: 24vh;
 }
+.cards-side{
+    padding-right: 0;
+}
+@media screen and (max-width: 1030px) {
+    .my-meme{
+        font-size: 14px;
+    }
+}

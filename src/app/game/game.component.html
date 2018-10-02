@@ -1,109 +1,114 @@
-<div *ngIf="player">
-  <div class="row">
-    <div class="col s9 m9 l9 cards-side">
-      <div class="row">
-        <div class="col s12 m12 l12 game-field">
-          <div class="row">
-            <div class="col s12 m3 l3">
-              <button id="exit-game" class="btn red lighten-2 hoverable" (click)="exitGame()">Quit</button>
-            </div>
-            <div class="col s12 m6 l6 opponent-name">
-              <span>Your opponent: </span><span>{{player?.opponentName}}</span>
-            </div>
-          </div>
-          <!-- first row of opponent cards -->
-          <div class="row">
-            <div class="col s12 m12 l12">
-              <div class="stay-inline" *ngFor="let card of opponentCardsRow1">
-                <app-opponent-card [cardHeight]="7" [cardWidth]="3.5" [isFlipped]="card"></app-opponent-card>
+<div *ngIf="game">
+  <div *ngIf="player">
+    <div class="row">
+      <div class="col s9 m9 l9 cards-side">
+        <div class="row">
+          <div class="col s12 m12 l12 game-field">
+            <div class="row">
+              <div class="col s12 m3 l3">
+                <button id="exit-game" class="btn red lighten-2 hoverable" (click)="exitGame()">Quit</button>
+              </div>
+              <div class="col s12 m6 l6 opponent-name">
+                <span>Your opponent: </span><span>{{player.opponentName}}</span>
               </div>
             </div>
-          </div>
-          <!-- second row of opponent cards -->
-          <div class="row">
-            <div class="col s12 m12 l12">
-              <div class="stay-inline" *ngFor="let card of opponentCardsRow2">
-                <app-opponent-card [cardHeight]="9" [cardWidth]="4.5" [isFlipped]="card"></app-opponent-card>
+            <!-- first row of opponent cards -->
+            <div class="row">
+              <div class="col s12 m12 l12">
+                <div class="stay-inline" *ngFor="let card of opponentCardsRow1">
+                  <app-opponent-card [cardHeight]="7" [cardWidth]="3.5" [isFlipped]="card"></app-opponent-card>
+                </div>
               </div>
             </div>
-          </div>
-          <!-- third row of opponent cards -->
-          <div class="row">
-            <div class="col s12 m12 l12">
-              <div class="stay-inline" *ngFor="let card of opponentCardsRow3">
-                <app-opponent-card [cardHeight]="11" [cardWidth]="5.5" [isFlipped]="card"></app-opponent-card>
+            <!-- second row of opponent cards -->
+            <div class="row">
+              <div class="col s12 m12 l12">
+                <div class="stay-inline" *ngFor="let card of opponentCardsRow2">
+                  <app-opponent-card [cardHeight]="9" [cardWidth]="4.5" [isFlipped]="card"></app-opponent-card>
+                </div>
               </div>
             </div>
-          </div>
+            <!-- third row of opponent cards -->
+            <div class="row">
+              <div class="col s12 m12 l12">
+                <div class="stay-inline" *ngFor="let card of opponentCardsRow3">
+                  <app-opponent-card [cardHeight]="11" [cardWidth]="5.5" [isFlipped]="card"></app-opponent-card>
+                </div>
+              </div>
+            </div>
 
-          <!--player side-->
-          <div class="row">
-            <!--first row of my cards-->
-            <div class="col s12 m12 l12">
-              <div class="stay-inline" *ngFor="let card of myCardsRow1">
-                <app-my-card [card]="memes[card]" (click)="openMemeCardDialog(memes[card])"></app-my-card>
+            <!--player side-->
+            <div class="row">
+              <!--first row of my cards-->
+              <div class="col s12 m12 l12">
+                <div class="stay-inline" *ngFor="let card of myCardsRow1">
+                  <app-my-card [card]="memes[card]" (click)="openMemeCardDialog(memes[card])"></app-my-card>
+                </div>
               </div>
-            </div>
-            <!--second row of my cards-->
-            <div class="col s12 m12 l12">
-              <div class="stay-inline" *ngFor="let card of myCardsRow2">
-                <app-my-card [card]="memes[card]" (click)="openMemeCardDialog(memes[card])"></app-my-card>
+              <!--second row of my cards-->
+              <div class="col s12 m12 l12">
+                <div class="stay-inline" *ngFor="let card of myCardsRow2">
+                  <app-my-card [card]="memes[card]" (click)="openMemeCardDialog(memes[card])"></app-my-card>
+                </div>
               </div>
-            </div>
-            <!--third row of my cards-->
-            <div class="col s12 m12 l12">
-              <div class="stay-inline" *ngFor="let card of myCardsRow3">
-                <app-my-card [card]="memes[card]" (click)="openMemeCardDialog(memes[card])"></app-my-card>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col s3 m3 l3 interaction-side">
-      <div class="row my-card-box">
-        <div class="col s6 m6 l6">
-          <p class="my-meme">Your meme:</p>
-          <p class="my-meme">{{player?.playerMeme}}</p>
-        </div>
-        <div class="col s6 m6 l6">
-          <div class="my-card">
-            <img [src]="myMemePath" class="meme-image">
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col s12 m12 l12 messages-side">
-          <div class="messages-box" id="scroll-to-bottom">
-            <div *ngFor="let message of chatHistory">
-              <div [ngClass]="{'message-left': message.isMyMessage, 'message-right': !message.isMyMessage}">
-                <div class="message" [ngClass]="{'my-message': message.isMyMessage, 'opponent-message': !message.isMyMessage}">{{message?.message}}
+              <!--third row of my cards-->
+              <div class="col s12 m12 l12">
+                <div class="stay-inline" *ngFor="let card of myCardsRow3">
+                  <app-my-card [card]="memes[card]" (click)="openMemeCardDialog(memes[card])"></app-my-card>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="col s12 m12 l12 question-answer-field">
-          <div class="question-answer-status-text">
-            <!--it will say either Ask question or Answer question or Flip cards then end turn 
-            with innerHTML or string interpolation-->
-            {{gameState}}
+      <div class="col s3 m3 l3 interaction-side">
+        <div class="row my-card-box">
+          <div class="col s6 m6 l6">
+            <p class="my-meme">Your meme:</p>
+            <p class="my-meme">{{memeNames[player.playerMeme]}}</p>
           </div>
-          <form class="game-form" name="game-form" autocomplete="off">
-            <!-- this  hidden input is a hack to prevent autocompletion on inputs -->
-            <input autocomplete="false" name="hidden" type="text" style="display:none;">
-            <input [disabled]="player?.playerState !== 0 || player?.playerState !== 4" type="text" id="submitMove" name="submitMove" class="form-control" placeholder="Write your question/answer here" [(ngModel)]="myMove">
-            <div class="button-wrapper">
-              <button [disabled]="player?.playerState !== 0 || player?.playerState !== 4" id="send-button" class="btn btn-default hoverable" type="button" (click)="makeMove()">Send<i class="material-icons right">send</i></button>
+          <div class="col s6 m6 l6">
+            <div class="my-card">
+              <img [src]="myMemePath" class="meme-image">
             </div>
-          </form>
-          <div class="button-wrapper">
-            <button [disabled]="player?.playerState !== 2" id="end-turn-button" class="btn btn-default hoverable" type="button" (click)="endTurn()">End Turn</button>
           </div>
         </div>
-      </div>    
+        <div class="row">
+          <div class="col s12 m12 l12 messages-side">
+            <div class="messages-box" id="scroll-to-bottom">
+              <div *ngFor="let message of chatHistory">
+                <div [ngClass]="{'message-left': message.isMyMessage, 'message-right': !message.isMyMessage}">
+                  <div class="message" [ngClass]="{'my-message': message.isMyMessage, 'opponent-message': !message.isMyMessage}">{{message?.message}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col s12 m12 l12 question-answer-field">
+            <div class="question-answer-status-text">
+              <!--it will say either Ask question or Answer question or Flip cards then end turn 
+              with innerHTML or string interpolation-->
+              {{gameState}}
+            </div>
+            <form class="game-form" name="game-form" autocomplete="off">
+              <!-- this  hidden input is a hack to prevent autocompletion on inputs -->
+              <input autocomplete="false" name="hidden" type="text" style="display:none;">
+              <input [disabled]="player.playerState == 1 || player.playerState == 2 || player.playerState == 3 || player.playerState == 5" type="text" id="submitMove" name="submitMove" class="form-control" placeholder="Write your question/answer here" [(ngModel)]="myMove">
+              <div class="button-wrapper">
+                <button [disabled]="player.playerState == 1 || player.playerState == 2 || player.playerState == 3 || player.playerState == 5" id="send-button" class="btn btn-default hoverable" type="button" (click)="makeMove()">Send<i class="material-icons right">send</i></button>
+              </div>
+            </form>
+            <div class="button-wrapper">
+              <button [disabled]="player.playerState != 2" id="end-turn-button" class="btn btn-default hoverable" type="button" (click)="endTurn()">End Turn</button>
+            </div>
+          </div>
+        </div>    
+      </div>
     </div>
   </div>
+</div>
+<div *ngIf="!game">
+  <app-homescreen [username]="username" [isDonateMessageShown]="true"></app-homescreen>
 </div>

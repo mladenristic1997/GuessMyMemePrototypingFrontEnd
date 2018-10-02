@@ -58,6 +58,8 @@ export class GameComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     //commented out for now
+    this.player = this.game;
+    this.gameStateMessage();
     for(let i = 0; i < 24; i++){
       this.memes.push({'name': this.memeNames[i], 'id': i, 'path': '../../assets/memes/' + i + '.png', 'isFlipped': false});
     }
@@ -99,13 +101,13 @@ export class GameComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result){
+      if(result === true){
         //if i return true from dialog then user clicked Exit and now send message to server to end game and return player to homescreen
         let data = {
           'player' : this.player
         }
-        this.ws.send("/app/quit", {}, data);
-        this.game = undefined;
+        //this.ws.send("/app/quit", {}, data);
+        this.game = null;
       }
     });
   }
@@ -133,14 +135,11 @@ export class GameComponent implements OnInit, OnDestroy {
     this.state = (this.state + 1) % 6;*/
     //checking if move is empty, cannot send empty string as a message
     if(this.myMove){
+      this.player['playerState'] = ((this.player['playerState'] + 1) % 6);
       let messageJson = {
         'message': this.myMove,
         'isMyMessage': true
       }
-      this.chatHistory.push(messageJson);
-      this.scrollToChatBottom();
-      document.getElementById('elementId').scrollTop = 0;
-      this.player['playerState'] = (this.player['playerState'] + 1) % 6;
       let data = JSON.stringify({
         'player' : this.player,
         'message' : this.myMove
@@ -148,6 +147,9 @@ export class GameComponent implements OnInit, OnDestroy {
       this.ws.send("/app/makeAMove", {}, data);
       this.myMove = "";
       this.gameStateMessage();
+      this.chatHistory.push(messageJson);
+      this.scrollToChatBottom();
+      document.getElementById('elementId').scrollTop = 0;
     }
   }
 

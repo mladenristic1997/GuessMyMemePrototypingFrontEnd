@@ -1,4 +1,4 @@
-<!--<div *ngIf="!isNameChosen">
+<div *ngIf="!isNameChosen">
   <div class="center-align in-center">
     <div class="row">
       <div class="wrapper-box">
@@ -12,12 +12,11 @@
     </div>
     <div class="row">
       <div class="wrapper-box">
-        <div [hidden]="!isUsernameTakenBool" class="username-taken">Username taken, try again</div>
+        <div [hidden]="!isUsernameTakenBool" class="username-taken">Username taken, try a different one!</div>
       </div>
     </div>
   </div>
 </div>
 <div *ngIf="isNameChosen && !gameRequestFromPlayer">
   <app-homescreen [username]="username"></app-homescreen>
-</div>-->
-<app-game></app-game>
+</div>

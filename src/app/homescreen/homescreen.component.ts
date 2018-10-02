@@ -15,13 +15,13 @@ import { DonateDialogComponent } from '../donate-dialog/donate-dialog.component'
 export class HomescreenComponent implements OnInit {
 
   @Input() username: string;
-  isDonateMessageShown = false;
+  @Input() isDonateMessageShown = false;
   showConversation: boolean = false;
   ws: any;
   disabled: boolean;
   httpGetRoomId;
   roomId: any;
-  game: any;
+  game: any = null;
   otherPlayer = "";
   askOtherPlayerName = "";
   opponent: any;
@@ -85,6 +85,10 @@ export class HomescreenComponent implements OnInit {
   }
 
   checkIfOtherPlayerAvailable(){
+    this.askedSomeoneForMatch = true;
+    if(this.otherPlayer === this.username){
+      alert("You cannot play with yourself");
+    }
     this.askOtherPlayerName = this.otherPlayer;
     this.otherPlayer = "";
     let data = JSON.stringify({
@@ -107,32 +111,22 @@ export class HomescreenComponent implements OnInit {
 
   //this method will handle if some user sent a request to play or if server sent a roomId to the user
   handleServerMessage(game){
-    //it is a game invitation
-    /*if(game['requestingPlayer']){
-      //trigger the game request modal
-      this.startGameWithRequestingPlayer(game['requestingPlayer'])
-    }*/
-    //it is a game session object
     if(game['refuseInvitation'] === true){
       this.askedSomeoneForMatch = false;
+      alert("Player refused your invitation");
     }
     else if(game['playerAvailable'] === false){
+      alert("Player not available");
       this.askedSomeoneForMatch = false;
     }
     else if(game['playerAvailable'] === true){
+      this.askedSomeoneForMatch = true;
       this.askOtherPlayer();
     }
     else if(game['requestingPlayer']){
       this.startGameWithRequestingPlayer(game['requestingPlayer']);
     }
     else if(game){ //we know we are handling a game object
-      if(game['playerOneName'] == this.username){
-        this.state = 0;
-      }
-      if(game['playerTwoName'] == this.username){
-        this.state = 3;
-      }
-      this.playerInLobby = false;
       this.game = game;
     }
   }

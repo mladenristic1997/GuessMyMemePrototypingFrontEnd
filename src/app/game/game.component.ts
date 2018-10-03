@@ -19,7 +19,6 @@ export class GameComponent implements OnInit, OnDestroy {
   @ViewChild('panel') public panel:ElementRef;
   @Input() game: any;
   @Input() username: any;
-  @Input() state: any;
   player = {};
   gameState = "";
   myMemePath: any;
@@ -47,6 +46,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     //commented out for now
+    console.log("game", this.game);
     this.player = this.game;
     this.gameStateMessage();
     for(let i = 0; i < 24; i++){
@@ -242,7 +242,6 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   cleanUp(){
-    this.game = undefined;
     this.player = {};
     this.myMemePath = undefined;
     this.myMove = undefined;
@@ -255,6 +254,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this.opponentCardsRow3[i] = false;
     }
     this.memes = [];
+    this.game = undefined;
   }
 
 }

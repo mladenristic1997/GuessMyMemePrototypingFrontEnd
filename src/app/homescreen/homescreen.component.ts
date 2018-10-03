@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
 import { isUndefined } from 'util';
 import { MatDialog } from '@angular/material/dialog';
 import { DonateDialogComponent } from '../donate-dialog/donate-dialog.component';
+import { InvitationDialogComponent } from '../invitation-dialog/invitation-dialog.component';
+import { RefuseInvitationDialogComponent } from '../refuse-invitation-dialog/refuse-invitation-dialog.component';
 
 @Component({
   selector: 'app-homescreen',
@@ -24,8 +26,6 @@ export class HomescreenComponent implements OnInit {
   game: any = null;
   otherPlayer = "";
   askOtherPlayerName = "";
-  opponent: any;
-  state: any;
   playerInLobby = false;
   askedSomeoneForMatch = false;
 
@@ -66,32 +66,61 @@ export class HomescreenComponent implements OnInit {
     console.log("sent");*/
   }
 
-  startGameWithRequestingPlayer(playerToStartGameWith){
-    if(window.confirm("Do you accept game invitation from player " + playerToStartGameWith)){
-      let data = JSON.stringify(
-        {
-          "playerOne": this.username,
-          "playerTwo": playerToStartGameWith
-        }
-      );
-      this.playerInLobby = false;
-      this.ws.send("/app/acceptInvitation", {}, data);
-    }
-    else{
-      let data = JSON.stringify(
-        {
-          "otherPlayer": playerToStartGameWith
-        }
-      );
-      this.ws.send("/app/refuseInvitation", {}, data);
-    }
+  showInvitationDialog(playerToStartGameWith){
+    let dialogRef = this.dialog.open(InvitationDialogComponent, {
+      height: '150px',
+      width: '450px',
+      data: { 'playerToStartGameWith' : playerToStartGameWith }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result === 'startGame'){
+        this.confirmRequest(playerToStartGameWith);
+      }
+      else{
+        this.refuseRequest(playerToStartGameWith);
+      }
+    });
+  }
+
+  showRefusalDialog(playerToStartGameWith){
+    let dialogRef = this.dialog.open(RefuseInvitationDialogComponent, {
+      height: '150px',
+      width: '450px',
+      data: { 'playerToStartGameWith' : playerToStartGameWith }
+    });
+  }
+
+  confirmRequest(playerToStartGameWith){
+    let data = JSON.stringify(
+      {
+        "playerOne": this.username,
+        "playerTwo": playerToStartGameWith
+      }
+    );
+    this.playerInLobby = false;
+    this.ws.send("/app/acceptInvitation", {}, data);
+  }
+
+  refuseRequest(playerToStartGameWith){
+    let data = JSON.stringify(
+      {
+        "otherPlayer": playerToStartGameWith
+      }
+    );
+    this.ws.send("/app/refuseInvitation", {}, data);
   }
 
   checkIfOtherPlayerAvailable(){
-    this.askedSomeoneForMatch = true;
+    if(!this.otherPlayer){
+      alert("Enter a real name");
+      return;
+    }
     if(this.otherPlayer === this.username){
       alert("You cannot play with yourself");
+      return;
     }
+    this.askedSomeoneForMatch = true;
     this.askOtherPlayerName = this.otherPlayer;
     this.otherPlayer = "";
     let data = JSON.stringify({
@@ -116,7 +145,11 @@ export class HomescreenComponent implements OnInit {
   handleServerMessage(game){
     if(game['refuseInvitation'] === true){
       this.askedSomeoneForMatch = false;
-      alert("Player refused your invitation");
+      this.showRefusalDialog(game['requestingPlayer']);
+    }
+    else if(game['playerExists'] === false) {
+      alert("Player you searched for doesn't exist");
+      this.askedSomeoneForMatch = false;
     }
     else if(game['playerAvailable'] === false){
       alert("Player not available");
@@ -127,7 +160,7 @@ export class HomescreenComponent implements OnInit {
       this.askOtherPlayer();
     }
     else if(game['requestingPlayer']){
-      this.startGameWithRequestingPlayer(game['requestingPlayer']);
+      this.showInvitationDialog(game['requestingPlayer']);
     }
     else if(game){ //we know we are handling a game object
       this.game = game;

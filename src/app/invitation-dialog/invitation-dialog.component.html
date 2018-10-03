@@ -1,0 +1,13 @@
+
+<mat-dialog-content>
+  <div class="exit-box">
+      <p class="exit-title">Do you want to accept {{data['playerToStartGameWith']}}'s invitation?</p>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <div class="right-align-buttons">
+    <button class="btn btn-default hoverable dialog-button" (click)="accept()">Accept</button>
+    <button class="btn red lighten-2 hoverable dialog-button" (click)="refuse()">Refuse</button>
+  </div>
+</mat-dialog-actions>

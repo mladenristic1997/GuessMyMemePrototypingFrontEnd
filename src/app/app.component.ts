@@ -26,6 +26,10 @@ export class AppComponent implements OnInit {
   }
 
   checkAvailability(username: string){
+    if(username.length > 15){
+      alert("Name too long");
+      return;
+    }
     if(username){
       this.httpIsUserAvailable = this.isUsernameExists();
       this.httpIsUserAvailable.subscribe(data => {

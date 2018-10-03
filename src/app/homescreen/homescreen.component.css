@@ -1,5 +1,5 @@
 .in-center{
-    margin-top: 40vh;
+    margin-top: 34vh;
 }
 #username-input{
     width: 250px;
@@ -41,4 +41,20 @@
     text-align: center;
     display: inline-block;
     border-radius: 10px 10px 10px 10px;
+}
+.username-wrapper{
+    background-color: #637B80;
+    text-align: center;
+    display: inline-block;
+    border-radius: 10px 10px 10px 10px;
+    margin: 15px;
+}
+.username{
+    background-color: #637B80;
+    text-align: center;
+    display: inline-block;
+    border-radius: 10px 10px 10px 10px;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 5px 15px;
 }

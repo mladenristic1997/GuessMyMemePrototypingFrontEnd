@@ -32,9 +32,12 @@ export class HomescreenComponent implements OnInit {
   constructor(private http: HttpClient, private dialog: MatDialog){}
 
   ngOnInit(){
-    this.connectUser();
+    this.game = null;
+    if(!this.ws){
+      this.connectUser();
+    }
     if(!this.isDonateMessageShown){
-      this.showDonateDialog();
+      //this.showDonateDialog();
     }
   }
 
@@ -132,26 +135,28 @@ export class HomescreenComponent implements OnInit {
   }
 
   connectUser() {
-    //connect to stomp where stomp endpoint is exposed
-    //let withWS = new SockJS("http://localhost:8080/connectUser");
-    //if we want to use SockJS then in WebSocketConfig add withSockJS(); in Spring
-    let subscribeUrl = "/topic/reply/" + this.username;
-    let socket = new WebSocket("ws://localhost:8080/connectUser");
-    this.ws = Stomp.over(socket);
-    let that = this;
-    this.ws.connect({}, function(frame) {
-      that.ws.subscribe("/errors", function(message) {
-        alert("Error " + message.body);
+    if(!this.ws){
+      //connect to stomp where stomp endpoint is exposed
+      //let withWS = new SockJS("http://localhost:8080/connectUser");
+      //if we want to use SockJS then in WebSocketConfig add withSockJS(); in Spring
+      let subscribeUrl = "/topic/reply/" + this.username;
+      let socket = new WebSocket("ws://localhost:8080/connectUser");
+      this.ws = Stomp.over(socket);
+      let that = this;
+      this.ws.connect({}, function(frame) {
+        that.ws.subscribe("/errors", function(message) {
+          alert("Error " + message.body);
+        });
+        that.ws.subscribe(subscribeUrl, function(game) {
+          //we need this subscription if someone wants to play with this player
+          //so we will write a method that will trigger a message that asks to join
+          that.handleServerMessage(JSON.parse(game.body));
+        });
+        that.disabled = true;
+      }, function(error) {
+        alert("STOMP error " + error);
       });
-      that.ws.subscribe(subscribeUrl, function(game) {
-        //we need this subscription if someone wants to play with this player
-        //so we will write a method that will trigger a message that asks to join
-        that.handleServerMessage(JSON.parse(game.body));
-      });
-      that.disabled = true;
-    }, function(error) {
-      alert("STOMP error " + error);
-    });
+    }
   }
 
   disconnect() {

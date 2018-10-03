@@ -26,17 +26,19 @@ export class AppComponent implements OnInit {
   }
 
   checkAvailability(username: string){
-    this.httpIsUserAvailable = this.isUsernameExists();
-    this.httpIsUserAvailable.subscribe(data => {
-      this.isUsernameTaken = data.body;
-      if(this.isUsernameTaken == true) {
-        this.isUsernameTakenBool = true;
-      }
-      else {
-        this.isNameChosen = true;
-      }
-    });
-    setTimeout(() => {}, 3000);
+    if(username){
+      this.httpIsUserAvailable = this.isUsernameExists();
+      this.httpIsUserAvailable.subscribe(data => {
+        this.isUsernameTaken = data.body;
+        if(this.isUsernameTaken == true) {
+          this.isUsernameTakenBool = true;
+        }
+        else {
+          this.isNameChosen = true;
+        }
+      });
+      setTimeout(() => {}, 3000);
+    }
   }
 
   isUsernameExists(): Observable<HttpResponse<Object>> {

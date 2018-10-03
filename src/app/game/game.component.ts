@@ -26,18 +26,7 @@ export class GameComponent implements OnInit, OnDestroy {
   scroll: any;
   ws: any;
   myMove: any;
-  opponentQuestion: any;
-  opponentAnswer: any;
-  chatHistory : Array<Object> = [
-    {
-      'message': 'You are on this council but we do not grant you the rank of master',
-      'isMyMessage': true
-    },
-    {
-      'message': 'Vat',
-      'isMyMessage': false
-    }
-  ];
+  chatHistory : Array<Object> = [];
   moveStatus: string;
   opponentCardsRow1 = [
     false, false, false, false, false, false, false, false
@@ -92,6 +81,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(){
     this.disconnect();
+    this.cleanUp();
   }
 
   exitGame(){
@@ -103,36 +93,28 @@ export class GameComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe(result => {
       if(result === true){
         //if i return true from dialog then user clicked Exit and now send message to server to end game and return player to homescreen
-        let data = {
+        let data = JSON.stringify({
           'player' : this.player
-        }
-        //this.ws.send("/app/quit", {}, data);
-        this.game = null;
+        });
+        this.ws.send("/app/quit", {}, data);
+        this.cleanUp();
       }
     });
   }
 
   endGameDialog(endGameStatus, endGameMessage){
     let dialogRef = this.dialog.open(EndGameDialogComponent, {
-      height: '250px',
+      height: '170px',
       width: '450px',
       data: { 'endGameStatus': endGameStatus, 'endGameMessage': endGameMessage }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.game = undefined;
+      this.cleanUp();
     });
   }
 
   makeMove(){
-    /*let data = JSON.stringify(
-      {
-        "username": this.username,
-        "move": this.myMove,
-        "roomId": this.game['roomId']
-      }
-    );
-    this.state = (this.state + 1) % 6;*/
     //checking if move is empty, cannot send empty string as a message
     if(this.myMove){
       this.player['playerState'] = ((this.player['playerState'] + 1) % 6);
@@ -153,9 +135,26 @@ export class GameComponent implements OnInit, OnDestroy {
     }
   }
 
+  endTurn(){
+    this.player['playerState'] = ((this.player['playerState'] + 1) % 6);
+    let data = JSON.stringify({
+      'player' : this.player
+    });
+    this.ws.send("/app/endTurn", {}, data);
+    this.gameStateMessage();
+  }
+
   handleMessage(move){
     if(move['gameOver']){
-      this.endGameDialog(move['endGameStatus'], move['endGameMessage']);
+      this.endGameDialog(move['gameOver']['endGameStatus'], move['gameOver']['endGameMessage']);
+      return;
+    }
+    if(move['playerEndTurn']){
+      this.player = move['playerEndTurn'];
+      if(move['playerEndTurn']['opponentFlippedMemes']){
+        this.flipCards(move['playerEndTurn']['opponentFlippedMemes']);
+        this.gameStateMessage();
+      }
       return;
     }
     this.player = move['player'];
@@ -164,19 +163,21 @@ export class GameComponent implements OnInit, OnDestroy {
       'isMyMessage': false
     };
     this.chatHistory.push(messageJson);
-    this.scrollToChatBottom();
-    this.flipCards(move['player']['opponentFlippedMemes']);
     this.gameStateMessage();
+    this.scrollToChatBottom();
   }
 
   flipCards(memes){
+    console.log("memes", memes);
     for(let i of memes){
-      switch(i / 8){
-        case 0: this.opponentCardsRow1[i % 8] = true; break;
+      if(i === -1) continue;
+      switch(Math.floor(i / 8)){
+        case 0: this.opponentCardsRow3[i % 8] = true; break;
         case 1: this.opponentCardsRow2[i % 8] = true; break;
-        case 2: this.opponentCardsRow3[i % 8] = true; break;
+        case 2: this.opponentCardsRow1[i % 8] = true; break;
       }
     }
+    console.log(this.opponentCardsRow1, this.opponentCardsRow2, this.opponentCardsRow3);
   }
 
   connect(roomId, username){
@@ -192,7 +193,7 @@ export class GameComponent implements OnInit, OnDestroy {
         alert("Error " + message.body);
       });
       that.ws.subscribe(subscribeUrl, function(move) {
-        that.handleMessage(move.body);
+        that.handleMessage(JSON.parse(move.body));
       });
     }, function(error) {
       alert("STOMP error " + error);
@@ -228,16 +229,32 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   guessMeme(memeId){
-    let data = {
+    let data = JSON.stringify({
       'player' : this.player,
       'guessedMemeId' : memeId
-    }
+    });
     this.ws.send("/app/guessMeme", {}, data);
   }
 
   //scroll to bottom on every new message
   scrollToChatBottom(): void {
       $("#scroll-to-bottom").animate({ scrollTop: $('#scroll-to-bottom')[0].scrollHeight }, 1000);
+  }
+
+  cleanUp(){
+    this.game = undefined;
+    this.player = {};
+    this.myMemePath = undefined;
+    this.myMove = undefined;
+    this.gameState = "";
+    this.chatHistory = [];
+    this.moveStatus = "";
+    for(let i = 0; i < this.opponentCardsRow1.length; i++){
+      this.opponentCardsRow1[i] = false;
+      this.opponentCardsRow2[i] = false;
+      this.opponentCardsRow3[i] = false;
+    }
+    this.memes = [];
   }
 
 }

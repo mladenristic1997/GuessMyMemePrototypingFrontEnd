@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
       alert("Name too long");
       return;
     }
-    if(username){
+    if(username.trim()){
       this.httpIsUserAvailable = this.isUsernameExists();
       this.httpIsUserAvailable.subscribe(data => {
         this.isUsernameTaken = data.body;

@@ -29,6 +29,7 @@ export class GameComponent implements OnInit, OnDestroy {
   @Input() game: any;
   @Input() username: any;
   @Output() childGame = new EventEmitter();
+  //todo stavi stateove da je key ime, a value broj statea
   player = {};
   gameState = "";
   gameOver: any;
@@ -173,6 +174,7 @@ export class GameComponent implements OnInit, OnDestroy {
       }
       return;
     }
+    //then it means it's a move
     this.player = move['player'];
     let messageJson = {
       'message': move['message'],

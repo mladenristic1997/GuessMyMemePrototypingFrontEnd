@@ -178,7 +178,7 @@ export class HomescreenComponent implements OnInit {
       //let withWS = new SockJS("http://localhost:8080/connectUser");
       //if we want to use SockJS then in WebSocketConfig add withSockJS(); in Spring
       let subscribeUrl = "/topic/reply/" + this.username;
-      let socket = new WebSocket("ws://localhost:8080/connectUser");
+      let socket = new WebSocket("ws://46.101.208.178/api/connectUser");
       this.ws = Stomp.over(socket);
       let that = this;
       this.ws.connect({}, function(frame) {

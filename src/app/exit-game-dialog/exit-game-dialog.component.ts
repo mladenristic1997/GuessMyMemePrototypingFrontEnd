@@ -18,7 +18,7 @@ export class ExitGameDialogComponent implements OnInit {
   }
 
   exit(){
-    this.dialogRef.close(true);
+    this.dialogRef.close('quit');
   }
 
 }

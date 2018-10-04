@@ -15,4 +15,9 @@
 }
 .right-align-buttons{
     margin-left: 142px;
+    display: inherit;
+}
+.mat-dialog-container {
+    background-color: #17232a !important;
+    overflow: scroll !important;
 }

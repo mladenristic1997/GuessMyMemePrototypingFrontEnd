@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, HostListener } from '@angular/core';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import { HttpClient, HttpResponse,HttpParams } from '@angular/common/http';
@@ -16,6 +16,10 @@ import { RefuseInvitationDialogComponent } from '../refuse-invitation-dialog/ref
 })
 export class HomescreenComponent implements OnInit {
 
+  @HostListener('window:beforeunload', ['$event'])
+  public doSomething($event) {
+      this.playerReloaded();
+  }
   @Input() username: string;
   @Input() isDonateMessageShown = false;
   showConversation: boolean = false;
@@ -37,7 +41,7 @@ export class HomescreenComponent implements OnInit {
       this.connectUser();
     }
     if(!this.isDonateMessageShown){
-      //this.showDonateDialog();
+      this.showDonateDialog();
     }
   }
 
@@ -199,4 +203,10 @@ export class HomescreenComponent implements OnInit {
     console.log("Disconnected");
   }
 
+  playerReloaded(){
+    let data = JSON.stringify({
+      'player' : this.username
+    });
+    this.ws.send("/app/removePlayer", {}, data);
+  }
 }

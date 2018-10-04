@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
@@ -16,11 +16,21 @@ import { EndGameDialogComponent } from '../end-game-dialog/end-game-dialog.compo
 })
 export class GameComponent implements OnInit, OnDestroy {
 
+  @HostListener('window:beforeunload', ['$event'])
+  public doSomething($event) {
+    if(!this.gameOver){
+      this.playerReloaded();
+    }
+    else{
+      this.cleanMe();
+    }
+  }
   @ViewChild('panel') public panel:ElementRef;
   @Input() game: any;
   @Input() username: any;
   player = {};
   gameState = "";
+  gameOver: any;
   myMemePath: any;
   scroll: any;
   ws: any;
@@ -91,12 +101,13 @@ export class GameComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result === true){
+      if(result === 'quit'){
         //if i return true from dialog then user clicked Exit and now send message to server to end game and return player to homescreen
         let data = JSON.stringify({
           'player' : this.player
         });
         this.ws.send("/app/quit", {}, data);
+        //window.location.reload();
         this.cleanUp();
       }
     });
@@ -110,6 +121,8 @@ export class GameComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      //window.location.reload();
+      this.removeMeFromInGame();
       this.cleanUp();
     });
   }
@@ -146,6 +159,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   handleMessage(move){
     if(move['gameOver']){
+      this.gameOver = true;
       this.endGameDialog(move['gameOver']['endGameStatus'], move['gameOver']['endGameMessage']);
       return;
     }
@@ -241,6 +255,13 @@ export class GameComponent implements OnInit, OnDestroy {
       $("#scroll-to-bottom").animate({ scrollTop: $('#scroll-to-bottom')[0].scrollHeight }, 1000);
   }
 
+  cleanMe(){
+    let data = JSON.stringify({
+      'player' : this.player
+    });
+    this.ws.send("/app/cleanMe", {}, data);
+  }
+
   cleanUp(){
     this.player = {};
     this.myMemePath = undefined;
@@ -255,6 +276,20 @@ export class GameComponent implements OnInit, OnDestroy {
     }
     this.memes = [];
     this.game = undefined;
+  }
+
+  playerReloaded(){
+    let data = JSON.stringify({
+      'player' : this.player
+    });
+    this.ws.send("/app/playerReloaded", {}, data);
+  }
+
+  removeMeFromInGame(){
+    let data = JSON.stringify({
+      'player' : this.player
+    });
+    this.ws.send("/app/removeFromInGame", {}, data);
   }
 
 }

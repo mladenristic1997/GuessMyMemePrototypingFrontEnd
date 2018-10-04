@@ -199,7 +199,7 @@ export class HomescreenComponent implements OnInit {
 
   disconnect() {
     if (this.ws != null) {
-      this.ws.ws.close();
+      this.ws.close();
     }
     console.log("Disconnected");
   }
@@ -212,6 +212,7 @@ export class HomescreenComponent implements OnInit {
   }
 
   resetGame(game){
+    this.playerInLobby = false;
     this.game = game;
   }
 }

@@ -218,7 +218,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   disconnect() {
     if (this.ws != null) {
-      this.ws.ws.disconnect();
+      this.ws.disconnect();
     }
     console.log("Disconnected");
   }

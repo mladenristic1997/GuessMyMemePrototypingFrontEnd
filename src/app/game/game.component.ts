@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, ViewChild, ElementRef, HostListener } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ViewChild, ElementRef, HostListener, Output, EventEmitter } from '@angular/core';
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
 import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
@@ -28,6 +28,7 @@ export class GameComponent implements OnInit, OnDestroy {
   @ViewChild('panel') public panel:ElementRef;
   @Input() game: any;
   @Input() username: any;
+  @Output() childGame = new EventEmitter();
   player = {};
   gameState = "";
   gameOver: any;
@@ -90,8 +91,8 @@ export class GameComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(){
+    console.log("destroy");
     this.disconnect();
-    this.cleanUp();
   }
 
   exitGame(){
@@ -129,7 +130,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   makeMove(){
     //checking if move is empty, cannot send empty string as a message
-    if(this.myMove){
+    if(this.myMove.trim()){
       this.player['playerState'] = ((this.player['playerState'] + 1) % 6);
       let messageJson = {
         'message': this.myMove,
@@ -146,6 +147,7 @@ export class GameComponent implements OnInit, OnDestroy {
       this.scrollToChatBottom();
       document.getElementById('elementId').scrollTop = 0;
     }
+    else this.myMove = "";
   }
 
   endTurn(){
@@ -216,7 +218,7 @@ export class GameComponent implements OnInit, OnDestroy {
 
   disconnect() {
     if (this.ws != null) {
-      this.ws.ws.close();
+      this.ws.ws.disconnect();
     }
     console.log("Disconnected");
   }
@@ -275,7 +277,8 @@ export class GameComponent implements OnInit, OnDestroy {
       this.opponentCardsRow3[i] = false;
     }
     this.memes = [];
-    this.game = undefined;
+    this.game = null;
+    this.childGame.emit(this.game);
   }
 
   playerReloaded(){

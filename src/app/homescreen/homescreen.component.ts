@@ -24,6 +24,7 @@ export class HomescreenComponent implements OnInit {
   @Input() isDonateMessageShown = false;
   showConversation: boolean = false;
   ws: any;
+  childGame;
   disabled: boolean;
   httpGetRoomId;
   roomId: any;
@@ -208,5 +209,9 @@ export class HomescreenComponent implements OnInit {
       'player' : this.username
     });
     this.ws.send("/app/removePlayer", {}, data);
+  }
+
+  resetGame(game){
+    this.game = game;
   }
 }

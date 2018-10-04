@@ -1,4 +1,4 @@
-<div *ngIf="!game"> 
+<ng-template [ngIf]="!game">
   <div class="row">
     <div class="username-wrapper">
       <div class="username">
@@ -27,11 +27,11 @@
     </div>
     <div class="row">
       <div class="play-random">
-        <a href="https://github.com/mladenristic1997/GuessMyMemePrototypingFrontEnd" onclick="window.open('https://github.com/mladenristic1997/GuessMyMemePrototypingBackEnd')" target="_blank"><button class="btn black hoverable" id="send">Github</button></a>
+        <a href="https://github.com/mladenristic1997" target="_blank"><button class="btn black hoverable" id="send">Github</button></a>
       </div>
     </div>
   </div>
-</div>
-<div *ngIf="game">
-  <app-game [game]="game" [username]="username"></app-game>
-</div>
+</ng-template>
+<ng-template [ngIf]="game">
+  <app-game (childGame)="resetGame($event)" [game]="game" [username]="username"></app-game>
+</ng-template>

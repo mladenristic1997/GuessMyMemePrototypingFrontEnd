@@ -46,7 +46,7 @@ export class AppComponent implements OnInit {
   }
 
   isUsernameExists(): Observable<HttpResponse<Object>> {
-    let params = new HttpParams().set("username", this.username); //Create new HttpParams
+    let params = new HttpParams().set("username", this.username.trim()); //Create new HttpParams
     return this.http.get("http://localhost:8080/checkUsername", {
       params: params,
       observe: 'response'

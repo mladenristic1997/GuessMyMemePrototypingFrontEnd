@@ -1,5 +1,13 @@
+.logo{
+    margin-top: 10vh;
+    text-align: center;
+}
+#logo-image{
+    height: 30vh;
+    width: 30vw;
+}
 .in-center{
-    margin-top: 50vh;
+    margin-top: 10vh;
 }
 #username-input{
     width: 300px;

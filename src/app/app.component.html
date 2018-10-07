@@ -7,7 +7,7 @@
   <div class="center-align in-center">
     <div class="row">
       <div class="wrapper-box">
-        <input type="text" id="username-input" name="username-input" class="form-control" placeholder="Enter username" [(ngModel)]="username">
+        <input type="text" id="username-input" name="username-input" (keyup.enter)="checkAvailability(username) class="form-control" placeholder="Enter username" [(ngModel)]="username">
       </div>
     </div>
     <div class="row">

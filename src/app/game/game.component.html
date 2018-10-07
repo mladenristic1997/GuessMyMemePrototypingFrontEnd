@@ -94,7 +94,7 @@
             <form class="game-form" name="game-form" autocomplete="off">
               <!-- this  hidden input is a hack to prevent autocompletion on inputs -->
               <input autocomplete="false" name="hidden" type="text" style="display:none;">
-              <input [disabled]="player.playerState == 1 || player.playerState == 2 || player.playerState == 3 || player.playerState == 5" type="text" id="submitMove" name="submitMove" class="form-control" placeholder="Write your question/answer here" [(ngModel)]="myMove">
+              <input [disabled]="player.playerState == 1 || player.playerState == 2 || player.playerState == 3 || player.playerState == 5" type="text" id="submitMove" name="submitMove" class="form-control" (keyup.enter)="makeMove()" placeholder="Write your question/answer here" [(ngModel)]="myMove">
               <div class="button-wrapper">
                 <button [disabled]="player.playerState == 1 || player.playerState == 2 || player.playerState == 3 || player.playerState == 5" id="send-button" class="btn btn-default hoverable" type="button" (click)="makeMove()">Send<i class="material-icons right">send</i></button>
               </div>

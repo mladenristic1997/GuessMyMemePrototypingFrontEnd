@@ -25,13 +25,9 @@ export class AppComponent implements OnInit {
     
   }
 
-  trimName(username){
-    username = username.replace(/\s/g,'');
-    return username;
-  }
-
   checkAvailability(username: string){
-    username = this.trimName(username)
+    username = username.replace(/ /g,'');
+    this.username = this.username.replace(/ /g, '');
     if(username.length > 15){
       alert("Name too long");
       return;

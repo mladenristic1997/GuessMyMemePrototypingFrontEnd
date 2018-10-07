@@ -25,12 +25,18 @@ export class AppComponent implements OnInit {
     
   }
 
+  trimName(username){
+    username = username.replace(/\s/g,'');
+    return username;
+  }
+
   checkAvailability(username: string){
+    username = this.trimName(username)
     if(username.length > 15){
       alert("Name too long");
       return;
     }
-    if(username.trim()){
+    if(username){
       this.httpIsUserAvailable = this.isUsernameExists();
       this.httpIsUserAvailable.subscribe(data => {
         this.isUsernameTaken = data.body;
@@ -46,7 +52,7 @@ export class AppComponent implements OnInit {
   }
 
   isUsernameExists(): Observable<HttpResponse<Object>> {
-    let params = new HttpParams().set("username", this.username.trim()); //Create new HttpParams
+    let params = new HttpParams().set("username", this.username); //Create new HttpParams
     return this.http.get("/api/checkUsername", {
       params: params,
       observe: 'response'

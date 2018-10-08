@@ -49,7 +49,7 @@ export class GameComponent implements OnInit, OnDestroy {
     false, false, false, false, false, false, false, false
   ];
   memes = [];
-  memeNames = ['Bongo Cat', 'Doge', 'Harambe', 'Etruscan Boar', 'Slaps Roof', 'Ugandan Knuckles', 'Dat Boi', 'Pepe', 'Dickbutt', 'Bike Cuck', 'Monkey Haircut', 'Ben Swolo', 'Just Right', 'Circle Game', 'Somebody touch my spaghet', 'Omae wa mou shindeiru', 'Skidaddle Skidoodle', 'Distracted Boyfriend', 'Zucc', 'Change my mind', 'Evil Patrick', 'American Chopper', 'Is this a pidgeon', 'Rick Astley'];
+  memeNames = ['Harambe', 'Roll Sage', 'Leeroy Jankins', 'Tide Pods', 'Doge', 'Omae Wa Mou Shindeiru', 'John Cena', 'Big Smoke', 'Advice Mallard', 'Drake', 'Flat Earth', 'Moth', 'Thanos Car', 'Somebody Touch My Spaghet', 'Hide The Pain Harold', 'All Your Base', 'Expanding Mind', 'Caveman Spongebob', 'Awkward Seal', 'Half Life 3', 'Salt Bae', 'Is this a Pidgeon', 'Fidget Spinner', 'Evil Patrick'];
   myCardsRow1 = [0, 1, 2, 3, 4, 5, 6, 7];
   myCardsRow2 = [8, 9, 10, 11, 12, 13, 14, 15];
   myCardsRow3 = [16, 17, 18, 19, 20, 21, 22, 23];

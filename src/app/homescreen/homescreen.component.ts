@@ -38,6 +38,8 @@ export class HomescreenComponent implements OnInit {
 
   ngOnInit(){
     this.game = null;
+    this.askedSomeoneForMatch = false;
+    this.playerInLobby = false;
     if(!this.ws){
       this.connectUser();
     }

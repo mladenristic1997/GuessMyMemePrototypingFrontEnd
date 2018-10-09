@@ -8,6 +8,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DonateDialogComponent } from '../donate-dialog/donate-dialog.component';
 import { InvitationDialogComponent } from '../invitation-dialog/invitation-dialog.component';
 import { RefuseInvitationDialogComponent } from '../refuse-invitation-dialog/refuse-invitation-dialog.component';
+import { RulesDialogComponent } from '../rules-dialog/rules-dialog.component';
 
 @Component({
   selector: 'app-homescreen',
@@ -46,6 +47,13 @@ export class HomescreenComponent implements OnInit {
     if(!this.isDonateMessageShown){
       this.showDonateDialog();
     }
+  }
+
+  openRules(){
+    let dialogRef = this.dialog.open(RulesDialogComponent, {
+      height: '73vh',
+      width: '450px',
+    });
   }
 
   showDonateDialog(){

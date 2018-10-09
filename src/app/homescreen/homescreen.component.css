@@ -53,6 +53,11 @@
     display: inline-block;
     border-radius: 10px 10px 10px 10px;
 }
+.rules{
+    background-color: #637B80;
+    border-radius: 10px 10px 10px 10px;
+    float: right;
+}
 .username-wrapper{
     background-color: #637B80;
     text-align: center;

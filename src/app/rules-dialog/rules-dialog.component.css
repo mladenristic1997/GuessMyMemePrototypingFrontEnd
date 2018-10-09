@@ -1,0 +1,37 @@
+.mat-dialog-container{
+    background-color: #637B80 !important;
+}
+.donate-box{
+    background-color: #8ba1a5;
+    border-radius: 10px 10px 10px 10px;
+    width: 100%;
+    height: 65vh;
+}
+.donate-message{
+    font-size: 2vh;
+    font-weight: bold;
+    margin: 15px;
+    margin-top: 0px;
+    text-align: justify;
+}
+.donate-title{
+    text-align: center;
+    font-weight: bold;
+    font-size: 3.3vh;
+    margin: 0px !important;
+}
+.donate-message-wrapper{
+    margin-top: 1rem;
+}
+.centered{
+    text-align: center !important;
+}
+@media screen and (max-width: 1366px){
+    .donate-message{
+        font-size: 2.32vh;
+    }
+}
+.right-align-buttons{
+    margin-left: 142px;
+    display: inherit;
+}

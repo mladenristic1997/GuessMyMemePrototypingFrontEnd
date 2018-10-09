@@ -16,6 +16,7 @@ import { ExitGameDialogComponent } from './exit-game-dialog/exit-game-dialog.com
 import { EndGameDialogComponent } from './end-game-dialog/end-game-dialog.component';
 import { InvitationDialogComponent } from './invitation-dialog/invitation-dialog.component';
 import { RefuseInvitationDialogComponent } from './refuse-invitation-dialog/refuse-invitation-dialog.component';
+import { RulesDialogComponent } from './rules-dialog/rules-dialog.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { RefuseInvitationDialogComponent } from './refuse-invitation-dialog/refu
     ExitGameDialogComponent,
     EndGameDialogComponent,
     InvitationDialogComponent,
-    RefuseInvitationDialogComponent
+    RefuseInvitationDialogComponent,
+    RulesDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +46,8 @@ import { RefuseInvitationDialogComponent } from './refuse-invitation-dialog/refu
     ExitGameDialogComponent,
     EndGameDialogComponent,
     InvitationDialogComponent,
-    RefuseInvitationDialogComponent
+    RefuseInvitationDialogComponent,
+    RulesDialogComponent
   ],
   providers: [],
   bootstrap: [AppComponent]
